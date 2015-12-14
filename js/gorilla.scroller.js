@@ -1,23 +1,25 @@
-if (!window.gorilla) {
+﻿if (!window.gorilla) {
     window.gorilla = {};
 }
 
 (function ($, gorilla) {
+    var root;
     var sections = [];
+
     var settings = {
         zIndex: 0
     };
 
     var scroller = function (elem, config) {
-        elem = $(elem);
+        root = $(elem);
         $.extend(settings, config || {});
         console.log(settings);
 
         $('body').addClass('gorilla-scroller');
-        elem.addClass('gorilla-scroller-root');
+        root.addClass('gorilla-scroller-root');
 
-        sectionConfig(elem);
-        eventConfig(elem);
+        sectionConfig(root);
+        eventConfig(root);
     };
 
     function sectionConfig(elem) {
@@ -32,13 +34,13 @@ if (!window.gorilla) {
     }
 
     function eventConfig() {
-        console.log('event-config');
-        $(window).mousewheel(function(e) {
+        $(window).mousewheel(function (e) {
             if (event.deltaY > 0) {
                 console.log('down');
-            } else {
-                console.log('up');
+                return;
             }
+
+            console.log('up');
         });
     }
 

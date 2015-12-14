@@ -1,10 +1,40 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <title></title>
-	<meta charset="utf-8" />
+    <title>Gorilla Scroller</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="The description of my page" />
+
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,500" rel="stylesheet" type="text/css">
+    <link href="../bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../css/gorilla.scroller.css" rel="stylesheet" />
+    <link href="../css/demo.css" rel="stylesheet" />
+
+    <script src="../bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="../bower_components/jquery-mousewheel/jquery.mousewheel.min.js"></script>
+    <script src="../dist/gorilla.scroller.min.js"></script>
+
+    <script>
+        $(function () {
+            $('#sections').gorillaScroller();
+        });
+    </script>
 </head>
 <body>
-    olá
+    <div id="sections">
+        <section class="section-one">
+            Section One
+        </section>
+        <section class="section-two">
+            Section Two
+        </section>
+        <section class="section-three">
+            Section Three
+        </section>
+        <section class="section-four">
+            Section Four
+        </section>
+    </div>
 </body>
 </html>

@@ -1,0 +1,31 @@
+﻿html, body{
+    font-size: 12px;
+    font-family: 'Lato'
+}
+
+.section-one,
+.section-two,
+.section-three,
+.section-four {
+    color: white;
+    padding: 20px;
+    letter-spacing: 1px;
+    font-size: 3rem;
+    text-transform:uppercase;
+}
+
+.section-one {
+    background: #3498DB;
+}
+
+.section-two {
+    background: #E74C3C;
+}
+
+.section-three {
+    background: #9B59B6;
+}
+
+.section-four {
+    background: #1ABC9C;
+}

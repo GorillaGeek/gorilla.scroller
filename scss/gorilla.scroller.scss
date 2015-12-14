@@ -1,0 +1,16 @@
+﻿.gorilla-scroller {
+    .gorilla-scroller-root {
+        > section:not(:last-child) {
+            position: absolute;
+            min-height: 100vh;
+            min-width: 100vw;
+            max-height: 0;
+            transition: all .3s linear;
+
+            &.gorilla-scroller-active {
+                max-height: 100vh;
+            }
+        }
+
+    }
+}

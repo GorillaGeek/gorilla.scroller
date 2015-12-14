@@ -2,9 +2,9 @@ var gulp = require('gulp');
 var $ = require('gulp-load-plugins')();
 
 var paths = {
-    js: ["js/app.js"],
-    sass: [],
-    libs: []
+    js: ["js/gorilla.scroller.js"],
+    sass: ["scss/gorilla.scroller.scss"],
+    sassDemo: ["scss/demo.scss"]
 };
 
 gulp.task("lint", function () {
@@ -28,16 +28,12 @@ gulp.task("js", ["minify"], function () {
 		.pipe(gulp.dest("dist"));
 });
 
-gulp.task("libs", function () {
-    return gulp.src(paths.libs)
-        .pipe($.uglify())
-		.pipe($.concat("libs.js"))
-		.pipe(gulp.dest("js"));
-});
-
 gulp.task('sass', function () {
     return gulp.src(paths.sass)
         .pipe($.sourcemaps.init())
+        .pipe($.sass({
+            outputStyle: 'compressed'
+        }).on('error', $.sass.logError))
 		.pipe($.autoprefixer({
 		    browsers: ['last 2 versions', 'ie >= 9']
 		}))
@@ -45,7 +41,20 @@ gulp.task('sass', function () {
 		.pipe(gulp.dest('css'));
 });
 
-gulp.task('default', ['sass', 'libs', 'js'], function () {
-    gulp.watch(paths.sass, ['sass']);
+gulp.task('sass-demo', function () {
+    return gulp.src(paths.sassDemo)
+        .pipe($.sourcemaps.init())
+        .pipe($.sass({
+            outputStyle: 'compressed'
+        }).on('error', $.sass.logError))
+		.pipe($.autoprefixer({
+		    browsers: ['last 2 versions', 'ie >= 9']
+		}))
+        .pipe($.sourcemaps.write())
+		.pipe(gulp.dest('css'));
+});
+
+gulp.task('default', ['sass', 'sass-demo', 'js'], function () {
+    gulp.watch(["scss/*.scss"], ['sass', 'sass-demo']);
     gulp.watch(paths.js, ['minify']);
 });

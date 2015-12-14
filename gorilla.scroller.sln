@@ -3,24 +3,25 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "src", ".", "{39E0FAFE-0F14-457D-A43C-F0C04E1B4C36}"
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "src", ".", "{1BF0117D-8CC3-422E-BDC5-92A0FA98E288}"
 	ProjectSection(WebsiteProperties) = preProject
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.5.2"
 		Debug.AspNetCompiler.VirtualPath = "/localhost_63236"
-		Debug.AspNetCompiler.PhysicalPath = "..\src\"
+		Debug.AspNetCompiler.PhysicalPath = "..\gorilla.scroller\"
 		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_63236\"
 		Debug.AspNetCompiler.Updateable = "true"
 		Debug.AspNetCompiler.ForceOverwrite = "true"
 		Debug.AspNetCompiler.FixedNames = "false"
 		Debug.AspNetCompiler.Debug = "True"
 		Release.AspNetCompiler.VirtualPath = "/localhost_63236"
-		Release.AspNetCompiler.PhysicalPath = "..\src\"
+		Release.AspNetCompiler.PhysicalPath = "..\gorilla.scroller\"
 		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_63236\"
 		Release.AspNetCompiler.Updateable = "true"
 		Release.AspNetCompiler.ForceOverwrite = "true"
 		Release.AspNetCompiler.FixedNames = "false"
 		Release.AspNetCompiler.Debug = "False"
 		VWDPort = "63236"
+		SlnRelativePath = "..\gorilla.scroller\"
 	EndProjectSection
 EndProject
 Global
@@ -28,8 +29,8 @@ Global
 		Debug|Any CPU = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{39E0FAFE-0F14-457D-A43C-F0C04E1B4C36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{39E0FAFE-0F14-457D-A43C-F0C04E1B4C36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1BF0117D-8CC3-422E-BDC5-92A0FA98E288}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1BF0117D-8CC3-422E-BDC5-92A0FA98E288}.Debug|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

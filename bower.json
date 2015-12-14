@@ -2,9 +2,9 @@
   "name": "gorilla.scroller",
   "description": "Gorilla scroller",
   "main": "dist/gorilla.scroller.js",
-    "authors": [
-        "danieloprado <danieloprado@outlook.com>"
-    ],
+  "authors": [
+    "danieloprado <danieloprado@outlook.com>"
+  ],
   "license": "MIT",
   "keywords": [
     "gorilla",
@@ -20,5 +20,9 @@
     "bower_components",
     "test",
     "tests"
-  ]
+  ],
+  "dependencies": {
+    "jquery": ">=1.11",
+    "bootstrap": "~3.3.6"
+  }
 }
