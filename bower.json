@@ -1,0 +1,24 @@
+{
+  "name": "gorilla.scroller",
+  "description": "Gorilla scroller",
+  "main": "dist/gorilla.scroller.js",
+    "authors": [
+        "danieloprado <danieloprado@outlook.com>"
+    ],
+  "license": "MIT",
+  "keywords": [
+    "gorilla",
+    "javascript",
+    "onepage",
+    "scroller"
+  ],
+  "moduleType": [],
+  "homepage": "http://github.com/GorillaGeek/gorilla.scroller",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
