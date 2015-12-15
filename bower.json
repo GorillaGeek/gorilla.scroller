@@ -23,6 +23,6 @@
   ],
   "dependencies": {
     "jquery": ">=1.11",
-    "bootstrap": "~3.3.6"
+    "jquery-mousewheel": "~3.1.13"
   }
 }
