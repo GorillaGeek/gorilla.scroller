@@ -2,7 +2,7 @@
   overflow: hidden;
 }
 
-.gorilla-scroller .gorilla-scroller-root > section {
+.gorilla-scroller .gorilla-scroller-root .gorilla-scroller-section {
   position: absolute;
   top: 0;
   left: 0;
@@ -13,7 +13,7 @@
   transition: all .3s linear;
 }
 
-.gorilla-scroller .gorilla-scroller-root > section.gorilla-scroller-active {
+.gorilla-scroller .gorilla-scroller-root .gorilla-scroller-section.gorilla-scroller-active {
   max-height: 100vh;
 }
 
