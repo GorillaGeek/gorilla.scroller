@@ -27,7 +27,7 @@ gulp.task("js", ["minify"], function () {
 		.pipe(gulp.dest("dist"));
 });
 
-gulp.task('sass', function () {
+gulp.task('sass-minify', function () {
     return gulp.src(paths.sass)
         .pipe($.sourcemaps.init())
         .pipe($.sass({
@@ -37,7 +37,19 @@ gulp.task('sass', function () {
 		    browsers: ['last 2 versions', 'ie >= 9']
 		}))
         .pipe($.sourcemaps.write())
-		.pipe(gulp.dest('css'));
+        .pipe($.concat("gorilla.scroller.min.css"))
+		.pipe(gulp.dest('dist'));
+});
+
+gulp.task('sass', ['sass-minify'], function () {
+    return gulp.src(paths.sass)
+        .pipe($.sass({
+            outputStyle: 'expanded'
+        }).on('error', $.sass.logError))
+		.pipe($.autoprefixer({
+		    browsers: ['last 2 versions', 'ie >= 9']
+		}))
+		.pipe(gulp.dest('dist'));
 });
 
 gulp.task('default', ['sass', 'js'], function () {

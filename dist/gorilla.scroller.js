@@ -79,18 +79,33 @@ if (!window.gorilla) {
     function eventConfig() {
         var timeout;
 
+        var current;
+        var initialScroll = null;
         $(window).mousewheel(function () {
             clearTimeout(timeout);
+            current = sections.current();
+
+            if (initialScroll === null) {
+                initialScroll = current.elem.scrollTop();
+            }
 
             if (event.deltaY > 0) {
                 timeout = setTimeout(function () {
-                    scrollDown();
+                    if (!current.hasScroll() || initialScroll === current.elem.scrollTop()) {
+                        scrollDown();
+                    }
+
+                    initialScroll = null;
                 }, settings.scrollDelay);
                 return;
             }
 
             timeout = setTimeout(function () {
-                scrollUp();
+                if (!current.hasScroll() || initialScroll === current.elem.scrollTop()) {
+                    scrollUp();
+                }
+
+                initialScroll = null;
             }, settings.scrollDelay);
         });
     }
