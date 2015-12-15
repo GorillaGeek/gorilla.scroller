@@ -1,6 +1,6 @@
-﻿html, body{
+﻿html, body {
     font-size: 12px;
-    font-family: 'Lato'
+    font-family: 'Lato';
 }
 
 .section-one,
@@ -8,10 +8,13 @@
 .section-three,
 .section-four {
     color: white;
-    padding: 20px;
     letter-spacing: 1px;
     font-size: 3rem;
-    text-transform:uppercase;
+    text-transform: uppercase;
+
+    .content {
+        height: 150vh;
+    }
 }
 
 .section-one {

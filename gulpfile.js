@@ -2,7 +2,7 @@ var gulp = require('gulp');
 var $ = require('gulp-load-plugins')();
 
 var paths = {
-    js: ["js/gorilla.scroller.js"],
+    js: ["js/gorilla.scroller.js", "js/*.js", "js/**/*.js"],
     sass: ["scss/gorilla.scroller.scss"],
     sassDemo: ["scss/demo.scss"]
 };

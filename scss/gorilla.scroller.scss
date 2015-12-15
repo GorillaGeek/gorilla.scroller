@@ -1,8 +1,13 @@
 ﻿.gorilla-scroller {
+    overflow: hidden;
+
     .gorilla-scroller-root {
-        > section:not(:last-child) {
+        > section {
             position: absolute;
-            min-height: 100vh;
+            top: 0;
+            left: 0;
+            overflow: auto;
+            height: 100vh;
             min-width: 100vw;
             max-height: 0;
             transition: all .3s linear;
@@ -12,5 +17,34 @@
             }
         }
 
+        .gorilla-scroller-navigation {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            margin: auto;
+            right: 20px;
+
+            ul {
+                margin: 0;
+                padding: 0;
+
+                li {
+                    display: block;
+                    margin-bottom: 10px;
+
+                    a {
+                        display: block;
+                        width: 15px;
+                        height: 15px;
+                        border: 3px solid white;
+                        border-radius: 50%;
+                    }
+
+                    &.active a{
+                        background: white;
+                    }
+                }
+            }
+        }
     }
 }
