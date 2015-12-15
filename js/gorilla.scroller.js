@@ -72,35 +72,49 @@
         sectionsDom.each(function (index) {
             sections.add($(this), index, sectionsDom.length);
         });
+
+        sections[0].active(true);
     }
 
     function eventConfig() {
         var timeout;
 
+        var current;
+        var initialScroll = null;
         $(window).mousewheel(function () {
             clearTimeout(timeout);
+            current = sections.current();
+
+            if (initialScroll === null) {
+                initialScroll = current.elem.scrollTop();
+            }
 
             if (event.deltaY > 0) {
                 timeout = setTimeout(function () {
-                    scrollDown();
+                    if (!current.hasScroll() || initialScroll === current.elem.scrollTop()) {
+                        scrollDown();
+                    }
+
+                    initialScroll = null;
                 }, settings.scrollDelay);
                 return;
             }
 
             timeout = setTimeout(function () {
-                scrollUp();
+                if (!current.hasScroll() || initialScroll === current.elem.scrollTop()) {
+                    scrollUp();
+                }
+
+                initialScroll = null;
             }, settings.scrollDelay);
         });
     }
 
+
     function scrollDown() {
         var current = sections.current();
 
-        if (!current.isScrollOnBottom()) {
-            return;
-        }
-
-        if (!current.next()) {
+        if (!current.isScrollOnBottom() || !current.next()) {
             return;
         }
 
@@ -127,6 +141,7 @@
 
             a.attr({ section: item.index });
 
+
             li.append(a);
             ul.append(li);
         });
@@ -134,6 +149,10 @@
         navigation.css({ 'z-index': sections.length + settings.zIndex });
         navigation.append(ul);
         root.append(navigation);
+
+        navigation.on('click', 'a', function () {
+            sections.find($(this).attr('section')).active(true);
+        });
 
         setTimeout(function () {
             navigation.height(ul.height());
@@ -146,7 +165,6 @@
 
         var current = sections.current();
 
-        console.log(current.index);
         navigation.find('li').removeClass('active');
         navigation.find('[section=' + current.index + ']').parents('li').addClass('active');
     }
@@ -158,7 +176,6 @@
     var Section = function (elem, index, zIndex) {
         this.elem = elem;
         this.index = index;
-        this.active(true);
 
         elem.addClass('gorilla-scroller-section gorilla-scroller-section-' + index);
         elem.attr('id', 'gorilla-scroller-section-' + index);
@@ -169,22 +186,40 @@
         return this.elem[0] === $(elem)[0];
     };
 
+
+    Section.prototype.hasScroll = function () {
+        return (this.elem[0].scrollHeight - this.elem.height()) > 0;
+    };
+
     Section.prototype.isScrollOnTop = function () {
-        return this.elem.scrollTop() === 0;
+        return !this.hasScroll() || this.elem.scrollTop() === 0;
     };
 
     Section.prototype.isScrollOnBottom = function () {
-        return this.elem.scrollTop() >= (this.elem[0].scrollHeight - this.elem.height());
+        return !this.hasScroll() || this.elem.scrollTop() >= (this.elem[0].scrollHeight - this.elem.height());
     };
 
-    Section.prototype.active = function (active) {
+    Section.prototype.active = function (active, isCascade) {
         if (active) {
             this.elem.addClass('gorilla-scroller-active');
+
+            if (this.next()) {
+                this.next().active(true, true);
+            }
+
+            if (!isCascade && this.prev()) {
+                this.prev().active(false, true);
+            }
+
             navigationChange(this.index);
             return;
         }
 
         this.elem.removeClass('gorilla-scroller-active');
+        if (isCascade && this.prev()) {
+            this.prev().active(false, true);
+        }
+
         navigationChange(this.index);
     };
 
