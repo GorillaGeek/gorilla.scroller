@@ -2,7 +2,7 @@
     "name": "gorilla.scroller",
     "description": "Gorilla scroller",
     "main": "dist/gorilla.scroller.js",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "authors": [
         "danieloprado <danieloprado@outlook.com>"
     ],

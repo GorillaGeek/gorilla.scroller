@@ -9,6 +9,7 @@ if (!window.gorilla) {
 	 ************************************/
     var root;
     var navigation;
+    var isDisabled = false;
     var settings = {
         zIndex: 0,
         scrollDelay: 300,
@@ -138,15 +139,47 @@ if (!window.gorilla) {
     }
 
     function disableConfig() {
-        $(window).resize(function() {
-            console.log('sre')
+        var enable = function() {
+            $('body').addClass('gorilla-scroller');
+
+            isDisabled = false;
+            sections[0].active(true);
+        };
+
+        var disable = function () {
+            isDisabled = true;
+            $('body').removeClass('gorilla-scroller');
+        };
+
+        var timeoutResize = null;
+        $(window).resize(function () {
+            clearTimeout(timeoutResize);
+            timeoutResize = setTimeout(function () {
+                if (typeof settings.disable == "function") {
+                    if (settings.disable()) {
+                        disable();
+                        return;
+                    }
+
+                    enable();
+                    return;
+                }
+
+                if (!settings.disable) {
+                    enable();
+                    return;
+                }
+
+                disable();
+            }, 100);
         });
+        $(window).trigger('resize');
     }
 
     function scrollDown() {
         var current = sections.current();
 
-        if (!current.isScrollOnBottom() || !current.next()) {
+        if (isDisabled || !current.isScrollOnBottom() || !current.next()) {
             return;
         }
 
@@ -156,7 +189,7 @@ if (!window.gorilla) {
     function scrollUp() {
         var current = sections.current();
 
-        if (!current.isScrollOnTop() || !current.prev()) {
+        if (isDisabled || !current.isScrollOnTop() || !current.prev()) {
             return;
         }
 
@@ -185,7 +218,7 @@ if (!window.gorilla) {
         });
 
         navigation.css({
-            'z-index': sections.length + settings.zIndex
+            'z-index': (sections.length + settings.zIndex) + 2
         });
         navigation.append(ul);
         root.append(navigation);
@@ -216,7 +249,11 @@ if (!window.gorilla) {
             }
         } while (currentLink.size() === 0);
 
-
+        navigation.removeClass(function (index, css) {
+            return (css.match(/(^|\s)active-\S+/g) || []).join(' ');
+        });
+        navigation.addClass("active-" + current.index);
+        
         navigation.find('li').removeClass("active active-sub");
         navigation.find('li').removeClass(function (index, css) {
             return (css.match(/(^|\s)active-\S+/g) || []).join(' ');

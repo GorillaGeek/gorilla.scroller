@@ -217,7 +217,6 @@ if (!window.gorilla) {
             ul.append(li);
         });
 
-        console.log(sections);
         navigation.css({
             'z-index': (sections.length + settings.zIndex) + 2
         });
