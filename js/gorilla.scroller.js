@@ -3,7 +3,6 @@ if (!window.gorilla) {
 }
 
 (function ($, gorilla) {
-
     /************************************
 	 * VARS
 	 ************************************/
@@ -114,7 +113,7 @@ if (!window.gorilla) {
 
         var current;
         var initialScroll = null;
-        $(window).mousewheel(function () {
+        $(window).mousewheel(function (event) {
             clearTimeout(timeout);
             current = sections.current();
 
@@ -122,7 +121,7 @@ if (!window.gorilla) {
                 initialScroll = current.elem.scrollTop();
             }
 
-            if (event.deltaY > 0) {
+            if (event.deltaY < 0) {
                 timeout = setTimeout(function () {
                     if (!current.hasScroll() || initialScroll === current.elem.scrollTop()) {
                         scrollDown();

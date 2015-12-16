@@ -14,7 +14,8 @@ if (!window.gorilla) {
         zIndex: 0,
         scrollDelay: 300,
         showNavigation: true,
-        disable: false
+        disable: false,
+        callback: function (event, data) { }
     };
 
     /************************************
@@ -33,7 +34,7 @@ if (!window.gorilla) {
     };
 
     sections.find = function (index) {
-        var dom = root.find('#gorilla-scroller-section-' + index);
+        var dom = root.find('.gorilla-scroller-section[section=' + index + ']');
 
         if (!dom.size()) {
             return null;
@@ -82,8 +83,6 @@ if (!window.gorilla) {
 
         current.active(true);
     };
-
-    alert('ok');
 
     Scroller.prototype.disabled = function () {
         return isDisabled;
@@ -145,11 +144,14 @@ if (!window.gorilla) {
     }
 
     function disableConfig() {
-        var enable = function() {
+        var enable = function () {
             $('body').addClass('gorilla-scroller');
 
+            if (isDisabled) {
+                sections[0].active(true);
+            }
+
             isDisabled = false;
-            sections[0].active(true);
         };
 
         var disable = function () {
@@ -259,7 +261,7 @@ if (!window.gorilla) {
             return (css.match(/(^|\s)active-\S+/g) || []).join(' ');
         });
         navigation.addClass("active-" + current.index);
-        
+
         navigation.find('li').removeClass("active active-sub");
         navigation.find('li').removeClass(function (index, css) {
             return (css.match(/(^|\s)active-\S+/g) || []).join(' ');
@@ -294,7 +296,7 @@ if (!window.gorilla) {
         }
 
         elem.addClass('gorilla-scroller-section gorilla-scroller-section-' + index);
-        elem.attr('id', 'gorilla-scroller-section-' + index);
+        elem.attr('section', index);
         elem.css({
             'z-index': zIndex
         });
@@ -320,7 +322,16 @@ if (!window.gorilla) {
         return !this.hasScroll() || this.elem.scrollTop() >= (this.elem[0].scrollHeight - this.elem.outerHeight());
     };
 
-    Section.prototype.active = function (active, isCascade) {
+    Section.prototype.active = function (active, applyCascade) {
+        if (!applyCascade) {
+            if (active) {
+                settings.callback("current", { section: this.index, elem: this.elem });
+            } else {
+                var next = this.next();
+                settings.callback("current", { section: next.index, elem: next.elem });
+            }
+        }
+
         if (active) {
             this.elem.addClass('gorilla-scroller-active');
 
@@ -328,7 +339,7 @@ if (!window.gorilla) {
                 this.next().active(true, true);
             }
 
-            if (!isCascade && this.prev()) {
+            if (!applyCascade && this.prev()) {
                 this.prev().active(false, true);
             }
 
@@ -337,7 +348,7 @@ if (!window.gorilla) {
         }
 
         this.elem.removeClass('gorilla-scroller-active');
-        if (isCascade && this.prev()) {
+        if (applyCascade && this.prev()) {
             this.prev().active(false, true);
         }
 
