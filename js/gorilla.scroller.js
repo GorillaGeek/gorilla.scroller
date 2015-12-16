@@ -1,23 +1,25 @@
-﻿if (!window.gorilla) {
+if (!window.gorilla) {
     window.gorilla = {};
 }
 
 (function ($, gorilla) {
 
     /************************************
-     * VARS
-     ************************************/
+	 * VARS
+	 ************************************/
     var root;
     var navigation;
+    var isDisabled = false;
     var settings = {
         zIndex: 0,
         scrollDelay: 300,
-        showNavigation: true
+        showNavigation: true,
+        disable: false
     };
 
     /************************************
-     * SECTIONS
-     ************************************/
+	 * SECTIONS
+	 ************************************/
     var sections = [];
 
     sections.add = function (elem, index, totalSections) {
@@ -43,8 +45,8 @@
     };
 
     /************************************
-     * EXPORT
-     ************************************/
+	 * EXPORT
+	 ************************************/
     Scroller = function (elem, config) {
         this.init($(elem), config || {});
     };
@@ -67,6 +69,8 @@
         if (settings.showNavigation) {
             navigationConfig();
         }
+
+        disableConfig();
     };
 
     Scroller.prototype.active = function (index) {
@@ -80,11 +84,13 @@
     };
 
     /************************************
-     * METHODS
-     ************************************/
+	 * METHODS
+	 ************************************/
     function sectionsConfig() {
         var sectionsDom = root.find('section');
-        sectionsDom.each(function (index) {
+
+        var index = 0;
+        sectionsDom.each(function () {
             var section = $(this);
 
             if (section.find('section').size() > 0) {
@@ -92,6 +98,7 @@
             }
 
             sections.add(section, index, sectionsDom.length);
+            index++;
         });
 
         sections[0].active(true);
@@ -131,10 +138,48 @@
         });
     }
 
+    function disableConfig() {
+        var enable = function() {
+            $('body').addClass('gorilla-scroller');
+
+            isDisabled = false;
+            sections[0].active(true);
+        };
+
+        var disable = function () {
+            isDisabled = true;
+            $('body').removeClass('gorilla-scroller');
+        };
+
+        var timeoutResize = null;
+        $(window).resize(function () {
+            clearTimeout(timeoutResize);
+            timeoutResize = setTimeout(function () {
+                if (typeof settings.disable == "function") {
+                    if (settings.disable()) {
+                        disable();
+                        return;
+                    }
+
+                    enable();
+                    return;
+                }
+
+                if (!settings.disable) {
+                    enable();
+                    return;
+                }
+
+                disable();
+            }, 100);
+        });
+        $(window).trigger('resize');
+    }
+
     function scrollDown() {
         var current = sections.current();
 
-        if (!current.isScrollOnBottom() || !current.next()) {
+        if (isDisabled || !current.isScrollOnBottom() || !current.next()) {
             return;
         }
 
@@ -144,7 +189,7 @@
     function scrollUp() {
         var current = sections.current();
 
-        if (!current.isScrollOnTop() || !current.prev()) {
+        if (isDisabled || !current.isScrollOnTop() || !current.prev()) {
             return;
         }
 
@@ -159,7 +204,9 @@
             var li = $("<li />");
             var a = $("<a />");
 
-            a.attr({ section: item.index });
+            a.attr({
+                section: item.index
+            });
 
             var parentSection = item.elem.parents('section');
             if (parentSection.size() > 0 && parentSection.find('section:first-child')[0] !== item.elem[0]) {
@@ -170,7 +217,10 @@
             ul.append(li);
         });
 
-        navigation.css({ 'z-index': sections.length + settings.zIndex });
+        console.log(sections);
+        navigation.css({
+            'z-index': (sections.length + settings.zIndex) + 2
+        });
         navigation.append(ul);
         root.append(navigation);
 
@@ -200,7 +250,11 @@
             }
         } while (currentLink.size() === 0);
 
-
+        navigation.removeClass(function (index, css) {
+            return (css.match(/(^|\s)active-\S+/g) || []).join(' ');
+        });
+        navigation.addClass("active-" + current.index);
+        
         navigation.find('li').removeClass("active active-sub");
         navigation.find('li').removeClass(function (index, css) {
             return (css.match(/(^|\s)active-\S+/g) || []).join(' ');
@@ -217,20 +271,28 @@
 
 
     /************************************
-     * SECTIONS
-     ************************************/
+	 * SECTIONS
+	 ************************************/
     var Section = function (elem, index, zIndex) {
         this.elem = elem;
         this.index = index;
+        this.parentIndex = 0;
 
         if (this.isChild()) {
-            console.log(elem.parents('section'), elem.parents('section').index(elem));
-            this.parentIndex = elem.parents('section').index(elem);
+            elem.parents('section').find('.gorilla-scroller-section').each(function (index, elem) {
+                if (this.is(elem)) {
+                    return false;
+                }
+
+                this.parentIndex++;
+            }.bind(this));
         }
 
         elem.addClass('gorilla-scroller-section gorilla-scroller-section-' + index);
         elem.attr('id', 'gorilla-scroller-section-' + index);
-        elem.css({ 'z-index': zIndex });
+        elem.css({
+            'z-index': zIndex
+        });
     };
 
     Section.prototype.is = function (elem) {
@@ -239,10 +301,10 @@
 
     Section.prototype.isChild = function () {
         return this.elem.parents('section').size() > 0;
-    }
+    };
 
     Section.prototype.hasScroll = function () {
-        return (this.elem[0].scrollHeight - this.elem.height()) > 0;
+        return (this.elem[0].scrollHeight - this.elem.outerHeight()) > 0;
     };
 
     Section.prototype.isScrollOnTop = function () {
@@ -250,7 +312,7 @@
     };
 
     Section.prototype.isScrollOnBottom = function () {
-        return !this.hasScroll() || this.elem.scrollTop() >= (this.elem[0].scrollHeight - this.elem.height());
+        return !this.hasScroll() || this.elem.scrollTop() >= (this.elem[0].scrollHeight - this.elem.outerHeight());
     };
 
     Section.prototype.active = function (active, isCascade) {

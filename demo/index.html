@@ -73,7 +73,11 @@
     <script>
         var scroller;
         $(function () {
-            scroller = $('#sections').gorillaScroller();
+            scroller = $('#sections').gorillaScroller({
+                disable: function () {
+                    return $(window).width() < 1024 || $(window).height() < 768;
+                }
+            });
         });
     </script>
 </head>

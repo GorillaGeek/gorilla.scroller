@@ -1,19 +1,22 @@
-﻿.gorilla-scroller {
+.gorilla-scroller-navigation{
+    display: none;
+}
+
+.gorilla-scroller {
     overflow: hidden;
 
     .gorilla-scroller-root {
         .gorilla-scroller-section {
             position: absolute;
-            top: 0;
+            top: -100vh;
             left: 0;
             overflow: auto;
             height: 100vh;
-            min-width: 100vw;
-            max-height: 0;
-            transition: all .3s linear;
+            width: 100vw;
+            transition: all 0.3s linear;
 
             &.gorilla-scroller-active {
-                max-height: 100vh;
+                top: 0;
             }
         }
 
@@ -23,6 +26,7 @@
             bottom: 0;
             margin: auto;
             right: 25px;
+            display: block;
 
             ul {
                 margin: 0;
@@ -41,7 +45,7 @@
                         cursor: pointer;
                     }
 
-                    &.active a{
+                    &.active a {
                         background: white;
                     }
                 }

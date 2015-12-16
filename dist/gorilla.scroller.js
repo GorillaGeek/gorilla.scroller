@@ -5,19 +5,20 @@ if (!window.gorilla) {
 (function ($, gorilla) {
 
     /************************************
-     * VARS
-     ************************************/
+	 * VARS
+	 ************************************/
     var root;
     var navigation;
     var settings = {
         zIndex: 0,
         scrollDelay: 300,
-        showNavigation: true
+        showNavigation: true,
+        disable: false
     };
 
     /************************************
-     * SECTIONS
-     ************************************/
+	 * SECTIONS
+	 ************************************/
     var sections = [];
 
     sections.add = function (elem, index, totalSections) {
@@ -43,8 +44,8 @@ if (!window.gorilla) {
     };
 
     /************************************
-     * EXPORT
-     ************************************/
+	 * EXPORT
+	 ************************************/
     Scroller = function (elem, config) {
         this.init($(elem), config || {});
     };
@@ -67,6 +68,8 @@ if (!window.gorilla) {
         if (settings.showNavigation) {
             navigationConfig();
         }
+
+        disableConfig();
     };
 
     Scroller.prototype.active = function (index) {
@@ -80,11 +83,13 @@ if (!window.gorilla) {
     };
 
     /************************************
-     * METHODS
-     ************************************/
+	 * METHODS
+	 ************************************/
     function sectionsConfig() {
         var sectionsDom = root.find('section');
-        sectionsDom.each(function (index) {
+
+        var index = 0;
+        sectionsDom.each(function () {
             var section = $(this);
 
             if (section.find('section').size() > 0) {
@@ -92,6 +97,7 @@ if (!window.gorilla) {
             }
 
             sections.add(section, index, sectionsDom.length);
+            index++;
         });
 
         sections[0].active(true);
@@ -131,6 +137,12 @@ if (!window.gorilla) {
         });
     }
 
+    function disableConfig() {
+        $(window).resize(function() {
+            console.log('sre')
+        });
+    }
+
     function scrollDown() {
         var current = sections.current();
 
@@ -159,7 +171,9 @@ if (!window.gorilla) {
             var li = $("<li />");
             var a = $("<a />");
 
-            a.attr({ section: item.index });
+            a.attr({
+                section: item.index
+            });
 
             var parentSection = item.elem.parents('section');
             if (parentSection.size() > 0 && parentSection.find('section:first-child')[0] !== item.elem[0]) {
@@ -170,7 +184,9 @@ if (!window.gorilla) {
             ul.append(li);
         });
 
-        navigation.css({ 'z-index': sections.length + settings.zIndex });
+        navigation.css({
+            'z-index': sections.length + settings.zIndex
+        });
         navigation.append(ul);
         root.append(navigation);
 
@@ -194,37 +210,63 @@ if (!window.gorilla) {
         do {
             currentLink = navigation.find('[section=' + index + ']');
             index--;
+
+            if (index < -1) {
+                throw "Gorilla Scroller: Navigation link not found";
+            }
         } while (currentLink.size() === 0);
 
-        navigation.find('li').removeClass("active");
+
+        navigation.find('li').removeClass("active active-sub");
         navigation.find('li').removeClass(function (index, css) {
             return (css.match(/(^|\s)active-\S+/g) || []).join(' ');
         });
 
-        currentLink.parents('li').addClass('active active-' + current.index);
+        var activeClass = "active";
 
+        if (current.isChild()) {
+            activeClass += " active-sub active-" + current.parentIndex;
+        }
+
+        currentLink.parents('li').addClass(activeClass);
     }
 
 
     /************************************
-     * SECTIONS
-     ************************************/
+	 * SECTIONS
+	 ************************************/
     var Section = function (elem, index, zIndex) {
         this.elem = elem;
         this.index = index;
+        this.parentIndex = 0;
+
+        if (this.isChild()) {
+            elem.parents('section').find('.gorilla-scroller-section').each(function (index, elem) {
+                if (this.is(elem)) {
+                    return false;
+                }
+
+                this.parentIndex++;
+            }.bind(this));
+        }
 
         elem.addClass('gorilla-scroller-section gorilla-scroller-section-' + index);
         elem.attr('id', 'gorilla-scroller-section-' + index);
-        elem.css({ 'z-index': zIndex });
+        elem.css({
+            'z-index': zIndex
+        });
     };
 
     Section.prototype.is = function (elem) {
         return this.elem[0] === $(elem)[0];
     };
 
+    Section.prototype.isChild = function () {
+        return this.elem.parents('section').size() > 0;
+    };
 
     Section.prototype.hasScroll = function () {
-        return (this.elem[0].scrollHeight - this.elem.height()) > 0;
+        return (this.elem[0].scrollHeight - this.elem.outerHeight()) > 0;
     };
 
     Section.prototype.isScrollOnTop = function () {
@@ -232,7 +274,7 @@ if (!window.gorilla) {
     };
 
     Section.prototype.isScrollOnBottom = function () {
-        return !this.hasScroll() || this.elem.scrollTop() >= (this.elem[0].scrollHeight - this.elem.height());
+        return !this.hasScroll() || this.elem.scrollTop() >= (this.elem[0].scrollHeight - this.elem.outerHeight());
     };
 
     Section.prototype.active = function (active, isCascade) {
