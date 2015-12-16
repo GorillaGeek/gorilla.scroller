@@ -83,6 +83,12 @@ if (!window.gorilla) {
         current.active(true);
     };
 
+    alert('ok');
+
+    Scroller.prototype.disabled = function () {
+        return isDisabled;
+    };
+
     /************************************
 	 * METHODS
 	 ************************************/
