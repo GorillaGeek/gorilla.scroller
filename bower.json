@@ -1,28 +1,29 @@
 {
-  "name": "gorilla.scroller",
-  "description": "Gorilla scroller",
-  "main": "dist/gorilla.scroller.js",
-  "authors": [
-    "danieloprado <danieloprado@outlook.com>"
-  ],
-  "license": "MIT",
-  "keywords": [
-    "gorilla",
-    "javascript",
-    "onepage",
-    "scroller"
-  ],
-  "moduleType": [],
-  "homepage": "http://github.com/GorillaGeek/gorilla.scroller",
-  "ignore": [
-    "**/.*",
-    "node_modules",
-    "bower_components",
-    "test",
-    "tests"
-  ],
-  "dependencies": {
-    "jquery": ">=1.11",
-    "jquery-mousewheel": "~3.1.13"
-  }
+    "name": "gorilla.scroller",
+    "description": "Gorilla scroller",
+    "main": "dist/gorilla.scroller.js",
+    "version": "1.0.0",
+    "authors": [
+        "danieloprado <danieloprado@outlook.com>"
+    ],
+    "license": "MIT",
+    "keywords": [
+        "gorilla",
+        "javascript",
+        "onepage",
+        "scroller"
+    ],
+    "moduleType": [ ],
+    "homepage": "http://github.com/GorillaGeek/gorilla.scroller",
+    "ignore": [
+        "**/.*",
+        "node_modules",
+        "bower_components",
+        "test",
+        "tests"
+    ],
+    "dependencies": {
+        "jquery": ">=1.11",
+        "jquery-mousewheel": "~3.1.13"
+    }
 }
